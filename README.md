@@ -238,15 +238,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Step 4: Download CIFAR-10 Dataset
-
-The dataset will be automatically downloaded on first run. Alternatively:
-
-```bash
-python -c "import torchvision; torchvision.datasets.CIFAR10('./data', download=True)"
-```
-
-### Step 5: (Optional) Set Up AI Chat
+### Step 4: (Optional) Set Up AI Chat
 
 For AI-powered chat functionality, get a free API key from [Groq](https://console.groq.com/) and set:
 
@@ -262,7 +254,96 @@ export GROQ_API_KEY='your-api-key-here'
 
 ---
 
-## 🚀 Usage
+## � Dataset & Model Setup
+
+### CIFAR-10 Dataset
+
+**Important:** The CIFAR-10 dataset is **NOT included** in this repository due to size constraints.
+
+#### Automatic Download (Recommended)
+
+The dataset will automatically download when you:
+- Run training: `python main.py`
+- Start the web app: `python app.py` and click "Start Training"
+
+**First-time download:**
+- Size: ~170 MB
+- Time: 2-5 minutes (depending on internet speed)
+- Location: `./data/cifar-10-batches-py/`
+
+#### Manual Download (Alternative)
+
+If automatic download fails:
+
+```bash
+# Option 1: Using Python
+python -c "import torchvision; torchvision.datasets.CIFAR10('./data', download=True)"
+
+# Option 2: Direct download
+# Download from: https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz
+# Extract to: ./data/cifar-10-batches-py/
+```
+
+### Pre-trained Model Weights
+
+**Model files (.pth) are NOT included** in the repository. You have two options:
+
+#### Option 1: Train Your Own Model (Recommended)
+
+```bash
+python main.py
+```
+
+This will:
+- Download CIFAR-10 dataset (if not present)
+- Train ResNet-18 model from scratch
+- Save weights to `fine_tuned_EEG_CIFAR10.pth`
+- Training time: ~15-20 minutes (CPU) or ~2-3 minutes (GPU)
+
+#### Option 2: Use Pre-trained Weights
+
+If you have pre-trained model files:
+1. Place `fine_tuned_EEG_CIFAR10.pth` in the root directory
+2. Place `EEG-ImageNet_1.pth` (optional) in the root directory
+3. Run the application: `python app.py`
+
+### What You Need to Download
+
+| Item | Required? | Size | Auto-Download? |
+|------|-----------|------|----------------|
+| CIFAR-10 Dataset | ✅ Yes | ~170 MB | ✅ Yes |
+| Model Weights (.pth) | ⚠️ Optional | ~44-100 MB | ❌ No (train yourself) |
+| Dependencies | ✅ Yes | ~500 MB | ✅ Yes (pip install) |
+
+### First-Time Setup Summary
+
+**Complete setup for new users:**
+
+```bash
+# 1. Clone repository
+git clone https://github.com/Pragathi-singh/BrainInspired-Classification-EEGVision.git
+cd BrainInspired-Classification-EEGVision
+
+# 2. Create virtual environment
+python -m venv venv
+venv\Scripts\activate  # Windows
+# source venv/bin/activate  # Linux/Mac
+
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. Train model (downloads CIFAR-10 automatically)
+python main.py
+
+# 5. Run web application
+python app.py
+```
+
+Visit http://localhost:5000 and start classifying images! 🚀
+
+---
+
+## �🚀 Usage
 
 ### Running the Application
 
@@ -1060,109 +1141,6 @@ flake8 app.py main.py
 - Keep functions focused and small
 
 ---
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-```
-MIT License
-
-Copyright (c) 2024 Brain-Inspired Classification Team
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-...
-```
-
----
-
-## 🙏 Acknowledgments
-
-### Frameworks & Libraries
-
-- **PyTorch** - Deep learning framework
-- **torchvision** - Computer vision models and datasets
-- **Flask** - Web framework
-- **Groq** - AI chat API
-- **Chart.js** - Data visualization
-- **Bootstrap** - UI components
-
-### Datasets
-
-- **CIFAR-10** - [Alex Krizhevsky, Vinod Nair, and Geoffrey Hinton](https://www.cs.toronto.edu/~kriz/cifar.html)
-
-### Research Papers
-
-1. **ResNet**: *Deep Residual Learning for Image Recognition* - He et al., 2015
-2. **CIFAR-10**: *Learning Multiple Layers of Features from Tiny Images* - Krizhevsky, 2009
-3. **Adam Optimizer**: *Adam: A Method for Stochastic Optimization* - Kingma & Ba, 2014
-
-### Inspired By
-
-- Fast.ai's practical deep learning approach
-- PyTorch official tutorials
-- Modern web ML deployment best practices
-
----
-
-## 📞 Contact & Support
-
-### Get Help
-
-- **Issues**: [GitHub Issues](https://github.com/yourusername/BrainInspired_Classification/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/BrainInspired_Classification/discussions)
-- **Email**: your.email@example.com
-
-### Stay Updated
-
-- ⭐ Star this repo to stay updated
-- 👀 Watch for releases and updates
-- 🍴 Fork to create your own version
-
----
-
-## 📊 Project Stats
-
-![GitHub stars](https://img.shields.io/github/stars/yourusername/BrainInspired_Classification?style=social)
-![GitHub forks](https://img.shields.io/github/forks/yourusername/BrainInspired_Classification?style=social)
-![GitHub issues](https://img.shields.io/github/issues/yourusername/BrainInspired_Classification)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/yourusername/BrainInspired_Classification)
-
----
-
-## 🎯 Roadmap
-
-### Upcoming Features
-
-- [ ] Support for more datasets (CIFAR-100, ImageNet)
-- [ ] Model comparison dashboard
-- [ ] Grad-CAM visualization for interpretability
-- [ ] Mobile app integration
-- [ ] Real-time webcam classification
-- [ ] Ensemble model predictions
-- [ ] Multi-GPU training support
-- [ ] TensorBoard integration
-- [ ] REST API documentation with Swagger
-- [ ] Unit tests and CI/CD pipeline
-
-### Version History
-
-- **v1.0.0** (Current) - Initial release with core features
-  - ResNet-18 classification
-  - Web dashboard
-  - AI chat integration
-  - Real-time training monitoring
-
----
-
-<p align="center">
-  <strong>Made with ❤️ by the Brain-Inspired Classification Team</strong>
-</p>
 
 <p align="center">
   <a href="#-table-of-contents">Back to Top ⬆️</a>
