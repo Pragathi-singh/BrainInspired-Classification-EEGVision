@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="bi bi-chat-left-dots"></i> Chat with Astra — AI Assistant <span class="small" style="color:#94a3b8;">(Updated UI)</span>
+          </h5>
+        </div>
+        <div class="card-body" style="display: flex; flex-direction: column; height: 500px;">
+          <div id="chatBox" style="flex: 1; overflow-y: auto; background: #0d1117; padding: 15px; border-radius: 6px; color: #e6edf3; margin-bottom: 10px; border: 1px solid #1e293b;"></div>
+          <div class="input-group">
+            <input id="chatInput" type="text" class="form-control" placeholder="Ask anything...">
+            <button id="chatSend" class="btn btn-primary">
+              <i class="bi bi-send"></i> Send
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  #chatBox {
+    word-break: break-word;
+    white-space: pre-wrap;
+  }
+
+  .chat-message {
+    margin-bottom: 12px;
+    padding: 8px;
+    border-radius: 4px;
+  }
+
+  .chat-user {
+    background: #1e40af;
+    color: white;
+    margin-left: 20px;
+  }
+
+  .chat-assistant {
+    background: #0f766e;
+    color: #d1fae5;
+    margin-right: 20px;
+  }
+
+  .chat-assistant strong {
+    color: #5eead4;
+  }
+</style>
+
+<script src="{{ url_for('static', filename='js/ai_chat.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card bg-dark text-light p-4">
+  <h2>About EEGVision</h2>
+  <p>EEGVision is a brain-inspired image classification demo built for academic submission.</p>
+
+  <h5 class="mt-4">Architecture</h5>
+  <ul>
+    <li>Backend: Flask + Python</li>
+    <li>Model: PyTorch (ResNet-18 fine-tuned on CIFAR-10)</li>
+    <li>Frontend: Bootstrap 5 + Chart.js</li>
+  </ul>
+
+  <h5 class="mt-4">How to run</h5>
+  <ol>
+    <li>Ensure dependencies installed (see README / requirements.txt)</li>
+    <li>Run <code>python app.py</code></li>
+    <li>Open <code>http://127.0.0.1:5000</code></li>
+  </ol>
+
+  <h5 class="mt-4">Team</h5>
+  <p>Team I-15—Computer Engineering</p>
+</div>
+{% endblock %}

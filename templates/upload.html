@@ -1,0 +1,145 @@
+<!-- templates/upload.html -->
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Upload Image for Prediction</h5>
+        </div>
+        <div class="card-body">
+          <form id="uploadForm" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+              <label class="form-label">Select Image</label>
+              <input class="form-control" type="file" name="file" id="fileInput" accept="image/*" required>
+            </div>
+            
+            <div class="mb-3">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="trainCheckbox" name="train_with_image">
+                <label class="form-check-label" for="trainCheckbox">
+                  Train model with this image
+                </label>
+              </div>
+              <small class="text-muted d-block mt-2">Check this to improve model accuracy by training with your image</small>
+            </div>
+            
+            <div id="labelGroup" class="mb-3" style="display: none;">
+              <label class="form-label">Image Class/Label</label>
+              <select class="form-select" name="image_label" id="labelSelect">
+                <option value="">-- Select CIFAR-10 Class --</option>
+                <option value="airplane">Airplane</option>
+                <option value="automobile">Automobile</option>
+                <option value="bird">Bird</option>
+                <option value="cat">Cat</option>
+                <option value="deer">Deer</option>
+                <option value="dog">Dog</option>
+                <option value="frog">Frog</option>
+                <option value="horse">Horse</option>
+                <option value="ship">Ship</option>
+                <option value="truck">Truck</option>
+              </select>
+              <small class="text-muted d-block mt-2">Select what's in your image so the model can learn correctly</small>
+            </div>
+            
+            <div class="d-grid gap-2">
+              <button class="btn btn-success btn-lg" type="submit" id="uploadBtn">Upload & Predict</button>
+              <a class="btn btn-secondary" href="{{ url_for('dashboard') }}">Cancel</a>
+            </div>
+            
+            <div id="statusMsg" class="alert mt-3" style="display: none;"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">CIFAR-10 Classes</h5>
+        </div>
+        <div class="card-body small">
+          <p class="text-muted mb-2">Upload images that belong to one of these 10 classes:</p>
+          <ul class="mb-0">
+            <li><strong>Airplane</strong> - Aircraft, jets, helicopters</li>
+            <li><strong>Automobile</strong> - Cars, vehicles (no trucks)</li>
+            <li><strong>Bird</strong> - Any bird or flying animal</li>
+            <li><strong>Cat</strong> - Cats and felines</li>
+            <li><strong>Deer</strong> - Deer, antelope, similar animals</li>
+            <li><strong>Dog</strong> - Dogs and canines</li>
+            <li><strong>Frog</strong> - Frogs and amphibians</li>
+            <li><strong>Horse</strong> - Horses and equines</li>
+            <li><strong>Ship</strong> - Ships, boats, vessels</li>
+            <li><strong>Truck</strong> - Trucks and large vehicles</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById('trainCheckbox').addEventListener('change', function() {
+  document.getElementById('labelGroup').style.display = this.checked ? 'block' : 'none';
+  if (!this.checked) {
+    document.getElementById('labelSelect').value = '';
+  }
+});
+
+document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  
+  const formData = new FormData(this);
+  const trainChecked = document.getElementById('trainCheckbox').checked;
+  const statusMsg = document.getElementById('statusMsg');
+  const uploadBtn = document.getElementById('uploadBtn');
+  
+  if (trainChecked && !document.getElementById('labelSelect').value) {
+    statusMsg.className = 'alert alert-warning mt-3';
+    statusMsg.textContent = 'Please select a class label if training is enabled';
+    statusMsg.style.display = 'block';
+    return;
+  }
+  
+  uploadBtn.disabled = true;
+  statusMsg.textContent = 'Uploading...';
+  statusMsg.className = 'alert alert-info mt-3';
+  statusMsg.style.display = 'block';
+  
+  try {
+    const res = await fetch('/upload', { method: 'POST', body: formData });
+    const data = await res.json();
+    
+    if (data.ok) {
+      statusMsg.className = 'alert alert-success mt-3';
+      if (data.training_started) {
+        statusMsg.innerHTML = `<strong>Success!</strong><br>Prediction: <strong>${data.predicted}</strong><br>Training started in background...`;
+      } else {
+        statusMsg.innerHTML = `<strong>Success!</strong><br>Prediction: <strong>${data.predicted}</strong>`;
+      }
+      document.getElementById('fileInput').value = '';
+      document.getElementById('trainCheckbox').checked = false;
+      document.getElementById('labelGroup').style.display = 'none';
+      
+      // Redirect to dashboard after 2 seconds
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 2000);
+    } else {
+      statusMsg.className = 'alert alert-danger mt-3';
+      statusMsg.textContent = 'Error: ' + (data.error || 'Unknown error');
+      statusMsg.style.display = 'block';
+    }
+  } catch (e) {
+    statusMsg.className = 'alert alert-danger mt-3';
+    statusMsg.textContent = 'Error: ' + e.message;
+    statusMsg.style.display = 'block';
+  } finally {
+    uploadBtn.disabled = false;
+  }
+});
+</script>
+
+{% endblock %}
+
